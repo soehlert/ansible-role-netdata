@@ -1,0 +1,85 @@
+---
+- name: "Install common pre-reqs"
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - autoconf
+    #    - autoconf-archive
+    - autogen
+    - automake
+    - gcc
+    - git
+    - make
+
+- name: "Install pre-requisites debian"
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libmnl-dev
+    - pkg-config
+    - uuid-dev
+    - zlib1g-dev
+  when: ansible_os_family == "Debian"
+
+- block:
+  - name: "Install pre-prereqs"
+    package:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - epel-release
+      # needed to get killall
+      - psmisc
+
+  - name: "Install pre-requisites redhat"
+    package:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - curl
+      - gcc
+      - jq
+      - libmnl-devel
+      - libuuid-devel
+      - nodejs
+      - pkgconfig
+      - zlib-devel
+  when: ansible_os_family == "RedHat"
+
+- name: "Check for clone"
+  stat:
+    path: /tmp/netdata
+  register: netdata_clone
+
+- name: "Clone repo"
+  git:
+    clone: yes
+    repo: https://github.com/firehol/netdata.git
+    dest: /tmp/netdata
+  when: netdata_clone.stat.exists == False
+
+- name: "Installation"
+  command: ./netdata-installer.sh --dont-wait --libs-are-really-here
+  args:
+    chdir: /tmp/netdata
+    creates: /etc/netdata
+
+- name: "Kill netdata"
+  command: killall netdata
+
+- name: "Service stuff"
+  service:
+    name: netdata
+    enabled: yes
+    state: started
+
+  #- name: "Daemon config"
+  #systemd:
+    #  daemon_reload: yes
+    #name: netdata
+    #enabled: yes
+    #state: started
+    #when: ansible_version >= 2.2
+

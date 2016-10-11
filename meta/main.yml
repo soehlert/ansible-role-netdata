@@ -1,0 +1,24 @@
+galaxy_info:
+  author: Sam Oehlert
+  description: Ansible role for Netdata (https://github.com/firehol/netdata)
+
+  license: license BSD
+  min_ansible_version: 2.0
+
+  # Below are all platforms currently available. Just uncomment
+  # the ones that apply to your role. If you don't see your
+  # platform on this list, let us know and we'll get it added!
+  #
+  platforms:
+  - name: Ubuntu
+    versions:
+    - vivid
+  - name: EL
+    versions:
+    - 7
+
+  galaxy_tags:
+    - netdata
+    - monitoring
+
+dependencies: []
