@@ -50,7 +50,6 @@ script:
   - >
     docker exec --tty "$(cat ${container_id})" env TERM=xterm
     ANSIBLE_ROLES_PATH=/etc/ansible/roles/ ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i /etc/ansible/roles/role_under_test/tests/inventory
-
     | tee -a ${idempotence}
   - >
     tail ${idempotence}
