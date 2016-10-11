@@ -43,13 +43,13 @@ script:
   #Run the role/playbook with ansible-playbook
   - >
     docker exec --tty "$(cat ${container_id})" env TERM=xterm
-    ANSIBLE_ROLES_PATH=/etc/ansible/roles/role_under_test/ ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i tests/inventory
+    ANSIBLE_ROLES_PATH=/etc/ansible/roles/ ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i tests/inventory
 
   # Run the role/playbook again, checking to make sure it's idempotent.
   - idempotence=$(mktemp)
   - >
     docker exec --tty "$(cat ${container_id})" env TERM=xterm
-    ANSIBLE_ROLES_PATH=/etc/ansible/roles/role_under_test/ ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i tests/inventory
+    ANSIBLE_ROLES_PATH=/etc/ansible/roles/ ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i tests/inventory
     | tee -a ${idempotence}
   - >
     tail ${idempotence}
