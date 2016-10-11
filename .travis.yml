@@ -30,7 +30,7 @@ script:
   - container_id=$(mktemp)
 
   # Run container detached, with our role mounted inside.
-  - 'docker run --detach --volume="${PWD}":/Users/soehlert/projects/netdata:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
+  - 'docker run --detach --volume="${PWD}":/Users/soehlert/projects:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
 
   # Basic role syntax check
   - >
