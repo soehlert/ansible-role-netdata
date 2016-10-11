@@ -70,4 +70,4 @@
   service:
     name: netdata
     enabled: yes
-    started: yes
+    state: started
