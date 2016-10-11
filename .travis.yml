@@ -32,32 +32,27 @@ script:
   - container_id=$(mktemp)
 
   # Run container detached, with our role mounted inside.
-  - 'sudo docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
-
-  # Need info
-  - >
-    sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm
-    ls /etc/ansible/roles/
+  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
 
   - >
-    sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
     ls /etc/ansible/roles/role_under_test/
 
   # Basic role syntax check
   - >
-    sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
     ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i tests/inventory
     --syntax-check
 
   #Run the role/playbook with ansible-playbook
   - >
-    sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
     ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i tests/inventory
 
   # Run the role/playbook again, checking to make sure it's idempotent.
   - idempotence=$(mktemp)
   - >
-    sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
     ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i tests/inventory
     | tee -a ${idempotence}
   - >
@@ -67,7 +62,7 @@ script:
     || (echo 'Idempotence test: fail' && exit 1)
 
   # Ensure netdata is installed
-  - 'sudo docker exec --tty "$(cat ${container_id})" env TERM=xterm curl http://localhost:19999/'
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm curl http://localhost:19999/'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
