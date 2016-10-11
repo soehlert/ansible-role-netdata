@@ -12,7 +12,10 @@ galaxy_info:
   platforms:
   - name: Ubuntu
     versions:
+    # For some reason, trusty/xenial fail on travis-ci (saying autoconf doesn't exist, when it does), but work just fine in vagrant and in VMs
+    - trusty
     - vivid
+    - xenial
   - name: EL
     versions:
     - 7
