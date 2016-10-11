@@ -36,11 +36,11 @@ script:
 
   # Need info
   - >
-    docker exec --tty "$(cat ${container_id}_" env TERM=xterm
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
     ls /etc/ansible/roles/
 
   - >
-    docker exec --tty "$(cat ${container_id}_" env TERM=xterm
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
     ls /etc/ansible/roles/*
 
   # Basic role syntax check
