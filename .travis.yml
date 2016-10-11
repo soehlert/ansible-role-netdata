@@ -5,25 +5,63 @@ python: "2.7"
 # Use the new container infrastructure
 sudo: false
 
-# Install ansible
-addons:
-  apt:
-    packages:
-    - python-pip
+env:
+  - distro: centos7
+    init: /usr/lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  - distro: centos6
+    init: /sbin/init
+    run_opts: ""
+  - distro: ubuntu1604
+    init: /lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  - distro: ubuntu1504
+    init: /sbin/init
+    run_opts: ""
+  - distro: ubuntu1404
+    init: /sbin/init
+    run_opts: ""
+  - distro: debian8
+    init: /lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
 
-install:
-  # Install ansible
-  - pip install ansible
+before_install:
+  # Pull container from Docker Hub.
+  - 'docker pull geerlingguy/docker-${distro}-ansible:latest'
 
-  # Check ansible version
-  - ansible --version
+script:
+  # Create a random file to store the container ID.
+  - container_id=$(mktemp)
 
-  # Create ansible.cfg with correct roles_path
-  - printf '[defaults]\nroles_path=../' >ansible.cfg
+  # Run container detached, with our role mounted inside.
+  - 'docker run --detach --volume="${PWD}":/Users/soehlert/projects/netdata:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
 
 script:
   # Basic role syntax check
-  - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+  - >
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
+    ansible-playbook /Users/soehlert/projects/netdata/tests/test.yml -i tests/inventory
+    --syntax-check
+
+  #Run the role/playbook with ansible-playbook
+  - >
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
+    ansible-playbook /Users/soehlert/projects/netdata/tests/test.yml -i tests/inventory
+
+  # Run the role/playbook again, checking to make sure it's idempotent.
+  - idempotence=$(mktemp)
+  - >
+    docker exec --tty "$(cat ${container_id})" env TERM=xterm
+    ansible-playbook /Users/soehlert/projects/netdata/tests/test.yml -i tests/inventory
+    | tee -a ${idempotence}
+  - >
+    tail ${idempotence}
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+
+  # Ensure netdata is installed
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm curl http://localhost:19999/'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
