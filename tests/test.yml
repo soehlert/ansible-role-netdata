@@ -1,7 +1,5 @@
 ---
-- hosts: netdata
-  remote_user: vagrant
-  become: true
-  become_user: root
+- hosts: localhost
+  remote_user: root
   roles:
     - netdata
