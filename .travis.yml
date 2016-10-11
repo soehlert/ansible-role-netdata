@@ -3,26 +3,23 @@
 sudo: required
 
 env:
+  global:
+    - ANSIBLE_ROLES_PATH: /etc/ansible/roles/role_under_test/
   - distro: centos7
     init: /usr/lib/systemd/systemd
     run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    ANSIBLE_ROLES_PATH: /etc/ansible/roles/role_under_test/
   - distro: centos6
     init: /sbin/init
     run_opts: ""
-    ANSIBLE_ROLES_PATH: /etc/ansible/roles/role_under_test/
   - distro: ubuntu1604
     init: /lib/systemd/systemd
     run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    ANSIBLE_ROLES_PATH: /etc/ansible/roles/role_under_test/
   - distro: ubuntu1404
     init: /sbin/init
     run_opts: ""
-    ANSIBLE_ROLES_PATH: /etc/ansible/roles/role_under_test/
   - distro: debian8
     init: /lib/systemd/systemd
     run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-    ANSIBLE_ROLES_PATH: /etc/ansible/roles/role_under_test/
 
 # Tell travis to start docker when it brings up an environment
 services:
