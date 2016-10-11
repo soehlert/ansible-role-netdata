@@ -66,6 +66,9 @@
     creates: /etc/netdata
   notify: "kill netdata"
 
+# Needed in order to make the service stuff available
+- meta: flush_handlers
+
 - name: "Service stuff"
   service:
     name: netdata
