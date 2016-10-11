@@ -65,21 +65,9 @@
   args:
     chdir: /tmp/netdata
     creates: /etc/netdata
-
-- name: "Kill netdata"
-  command: killall netdata
+  notify: "kill netdata"
 
 - name: "Service stuff"
   service:
     name: netdata
     enabled: yes
-    state: started
-
-  #- name: "Daemon config"
-  #systemd:
-    #  daemon_reload: yes
-    #name: netdata
-    #enabled: yes
-    #state: started
-    #when: ansible_version >= 2.2
-

@@ -1,2 +1,10 @@
 ---
 # handlers file for netdata
+- name: "kill netdata"
+  command: killall netdata
+  notify: "start netdata"
+
+- name: "start netdata"
+  service:
+    name: netdata
+    state: started
