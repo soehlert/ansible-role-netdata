@@ -1,5 +1,6 @@
 ---
-services: docker
+# We need sudo for some of the Docker commands.
+sudo: required
 
 env:
   - distro: centos7
@@ -17,6 +18,10 @@ env:
   - distro: debian8
     init: /lib/systemd/systemd
     run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+
+# Tell travis to start docker when it brings up an environment
+services:
+  - docker
 
 before_install:
   # Pull container from Docker Hub.
