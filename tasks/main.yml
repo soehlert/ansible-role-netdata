@@ -5,7 +5,6 @@
     state: present
   with_items:
     - autoconf
-    #    - autoconf-archive
     - autogen
     - automake
     - gcc
@@ -71,3 +70,4 @@
   service:
     name: netdata
     enabled: yes
+    started: yes
