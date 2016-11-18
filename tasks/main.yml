@@ -2,6 +2,7 @@
 - name: Update cache for debian based
   apt:
     update_cache: yes
+  changed_when: False
   when: ansible_os_family == "Debian"
 
 - name: "Install common pre-reqs"
