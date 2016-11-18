@@ -71,9 +71,11 @@
     chdir: /tmp/netdata
     creates: /etc/netdata
   notify: "kill netdata"
+  when: (not ansible_os_family == "Debian")
 
 # Needed in order to make the service stuff available
 - meta: flush_handlers
+  when: (not ansible_os_family == "Debian")
 
 - name: "Service stuff"
   service:
