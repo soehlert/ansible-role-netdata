@@ -70,7 +70,7 @@
   args:
     chdir: /tmp/netdata
     creates: /etc/netdata
-  notify: "killall netdata"
+  notify: "kill netdata"
 
 # Needed in order to make the service stuff available
 - meta: flush_handlers
