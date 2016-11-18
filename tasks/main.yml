@@ -75,7 +75,6 @@
 
 # Needed in order to make the service stuff available
 - meta: flush_handlers
-  when: (not ansible_os_family == "Debian")
 
 - name: "Service stuff"
   service:
