@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/soehlert/ansible-role-netdata.svg?branch=master)](https://travis-ci.org/soehlert/ansible-role-netdata)
-
 Role Name
 =========
 
